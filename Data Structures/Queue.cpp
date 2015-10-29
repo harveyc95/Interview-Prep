@@ -1,7 +1,7 @@
 #include <assert.h>
 
 struct node {
-	Tid thread_id;
+	int thread_id;
 	struct node* next;
 };
 
@@ -20,7 +20,7 @@ void queue_print (struct wait_queue *q) {
 	printf("---------------------------------------------\n");
 }
 
-void queue_add (struct wait_queue *q, Tid id) {
+void queue_add (struct wait_queue *q, int id) {
 	struct node *newNode = (struct node*)malloc(sizeof(struct node));
 	newNode->thread_id = id;
 	newNode->next = NULL;
@@ -34,25 +34,25 @@ void queue_add (struct wait_queue *q, Tid id) {
 	return;
 }
 
-Tid queue_remove_first (struct wait_queue *q) {
+int queue_remove_first (struct wait_queue *q) {
 	if (q->head == NULL)
 		return -1;
-	Tid removedTid = q->head->thread_id;
+	int removedInt = q->head->thread_id;
 	if (q->head == q->tail) { // if there is only 1 element
 		q->head = NULL;
 		free(q->tail);
 		q->tail = NULL;
-		return removedTid;
+		return removedInt;
 	}
 	// there are multiple elements in the queue
 	struct node* nodePointer = q->head; // save the head pointer
 	q->head = q->head->next; // advance the head pointer by one
 	nodePointer->next = NULL;
 	free(nodePointer);
-	return removedTid;
+	return removedInt;
 }
 
-Tid queue_remove_index (struct wait_queue *q, Tid  id) {
+int queue_remove_index (struct wait_queue *q, int  id) {
 	struct node *currNode = q->head;
 	struct node *prevNode = NULL;
 	// if id is the first element
@@ -67,7 +67,7 @@ Tid queue_remove_index (struct wait_queue *q, Tid  id) {
 	}
 	if (currNode == NULL) // if not found
 		return -1;
-	Tid removedTid = currNode->thread_id; // save removed Tid
+	int removedInt = currNode->thread_id; // save removed Int
 	if (currNode == q->tail) { // id is at the end of the list
 		prevNode->next = NULL;
 		q->tail = prevNode;
@@ -76,5 +76,5 @@ Tid queue_remove_index (struct wait_queue *q, Tid  id) {
 		currNode->next = NULL;
 	}
 	free(currNode);
-	return removedTid;
+	return removedInt;
 }
